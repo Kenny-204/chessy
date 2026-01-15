@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import catchAsync from "../utils/catchAsync.js";
 import jwt from "jsonwebtoken";
 import AppError from "../utils/AppError.js";
+import { promisify } from "util";
 
 function signToken(id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -17,6 +18,26 @@ function sendCookie(name, value, res) {
     maxAge: 1000 * 60 * 60 * 24 * 30,
   });
 }
+
+export const protect = catchAsync(async function (req, res, next) {
+  const token = req.cookies.jwt;
+
+  if (!token)
+    return new AppError("You are not logged in. Login to gain access", 401);
+
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const currentUser = User.findById(decoded.id);
+
+  if (!currentUser) return new AppError("There is no user for this token", 401);
+  if (currentUser.changedPasswordAfter)
+    return new AppError(
+      "This user changed password recently. Login again",
+      403
+    );
+  req.user = currentUser;
+
+  next();
+});
 
 export const signup = catchAsync(async function (req, res, next) {
   const { email, username, password, passwordConfirm } = req.body;

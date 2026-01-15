@@ -56,6 +56,14 @@ userSchema.methods.correctPassword = function (
   return bcrypt.compare(candidatePassword, userPassword);
 };
 
+userSchema.methods.changedPasswordAfter = function (issuedAt) {
+  if (this.passwordChangedAt) {
+    const dateInSeconds = new Date(this.passwordChangedAt).getTime() / 1000;
+    return dateInSeconds > issuedAt;
+  }
+  return false;
+};
+
 const User = mongoose.model("users", userSchema);
 
 export default User;
