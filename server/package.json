@@ -1,9 +1,31 @@
 {
+  "name": "chessy-server",
+  "version": "1.0.0",
+  "description": "server for my online multiplayer chess game",
+  "homepage": "https://github.com/Kenny-204/chessy#readme",
+  "bugs": {
+    "url": "https://github.com/Kenny-204/chessy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kenny-204/chessy.git"
+  },
+  "license": "ISC",
+  "author": "Kehinde Giwa",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "json-web-token": "^3.2.0",
     "mongoose": "^9.1.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
   }
 }
